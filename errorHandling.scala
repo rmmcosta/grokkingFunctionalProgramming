@@ -53,7 +53,10 @@ object TvShow {
     if (startYearIndex != -1 && endYearIndex != -1 && endYearIndex - startYearIndex == 5) {
       Right(rawTvShow.substring(startYearIndex + 1, endYearIndex).toInt)
     } else {
-      Left("Failed to parse the start year")
+      extractSingleYear(rawTvShow) match {
+        case Left(value) => Left("Failed to parse the start year")
+        case Right(value) => Right(value)
+      }
     }
   }
   def extractEndYear(rawTvShow: String): Either[String, Int] = {
@@ -62,7 +65,10 @@ object TvShow {
     if (endYearIndex != -1 && endYearIndex2 != -1 && endYearIndex2 - endYearIndex == 5) {
       Right(rawTvShow.substring(endYearIndex + 1, endYearIndex2).toInt)
     } else {
-      Left("Failed to parse the end year")
+      extractSingleYear(rawTvShow) match {
+        case Left(value) => Left("Failed to parse the end year")
+        case Right(value) => Right(value)
+      }
     }
   }
   def extractSingleYear(rawTvShow: String): Either[String, Int] = {
