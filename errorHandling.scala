@@ -8,7 +8,9 @@ object main extends App {
     "The Queen's Gambit (-2020)",
     "Breaking Bad (-)",
     "Game of Thrones",
-    "(2018-2020)"
+    "(2018-2020)",
+    "The Sopranos (1999-2007)",
+    "Wrong year (xpto-abcd)"
   )
 
   println(rawTvShows)
@@ -18,68 +20,59 @@ object main extends App {
   println(TvShow.parseShow(rawTvShows.apply(3)))
   println(TvShow.parseShow(rawTvShows.apply(4)))
   println(TvShow.parseShow(rawTvShows.apply(5)))
-  // print(TvShow.parseShows(rawTvShows))
+  println(TvShow.parseShow(rawTvShows.apply(6)))
+  println(TvShow.parseShow(rawTvShows.apply(7)))
+  println(TvShow.parseShow(rawTvShows.apply(8)))
+  println(TvShow.parseShow(rawTvShows.apply(9)))
+  println(TvShow.parseShow(rawTvShows.apply(10)))
 }
 
 case class TvShow(title: String, startYear: Int, endYear: Int)
 
 object TvShow {
-  def parseShows(rawTvShows: List[String]): Either[String, List[TvShow]] = {
-    val parsedTvShows = rawTvShows.map(parseShow)
-    if (parsedTvShows.exists(_.isLeft)) {
-      Left(parsedTvShows.filter(_.isLeft).map(_.left.get).mkString(", "))
+  def parseShows(rawTvShows: List[String]): List[Option[TvShow]] =
+    rawTvShows.map(parseShow)
+  def parseShow(rawTvShow: String): Option[TvShow] = for {
+    title <- extractTitle(rawTvShow)
+    startYear <- extractStartYear(rawTvShow)
+    endYear <- extractEndYear(rawTvShow)
+  } yield TvShow(title, startYear, endYear)
+  def extractTitle(rawTvShow: String): Option[String] = {
+    val openParenthesis = rawTvShow.indexOf("(")
+    if (openParenthesis < 1) {
+      None
     } else {
-      Right(parsedTvShows.map(_.right.get))
+      Some(rawTvShow.substring(0, openParenthesis).trim)
     }
   }
-  def parseShow(rawTvShow: String): Either[String, TvShow] = {
-    for {
-      title <- extractTitle(rawTvShow)
-      startYear <- extractStartYear(rawTvShow)
-      endYear <- extractEndYear(rawTvShow)
-    } yield TvShow(title, startYear, endYear)
-  }
-  def extractTitle(rawTvShow: String): Either[String, String] = {
-    val spaceIndex = rawTvShow.indexOf(" (")
-    if (spaceIndex != -1) {
-      Right(rawTvShow.substring(0, spaceIndex))
+  def extractStartYear(rawTvShow: String): Option[Int] = {
+    val openParenthesis = rawTvShow.indexOf("(")
+    val dash = rawTvShow.indexOf("-")
+    if (dash - openParenthesis != 5) {
+      extractSingleYear(rawTvShow)
     } else {
-      Left("Failed to parse the title")
+      val year = rawTvShow.substring(openParenthesis + 1, dash)
+      year.toIntOption
     }
   }
-  def extractStartYear(rawTvShow: String): Either[String, Int] = {
-    val startYearIndex = rawTvShow.indexOf("(")
-    val endYearIndex = rawTvShow.indexOf("-")
-    if (startYearIndex != -1 && endYearIndex != -1 && endYearIndex - startYearIndex == 5) {
-      Right(rawTvShow.substring(startYearIndex + 1, endYearIndex).toInt)
+  def extractEndYear(rawTvShow: String): Option[Int] = {
+    val dash = rawTvShow.indexOf("-")
+    val closeParenthesis = rawTvShow.indexOf(")")
+    if (closeParenthesis - dash != 5) {
+      extractSingleYear(rawTvShow)
     } else {
-      extractSingleYear(rawTvShow) match {
-        case Left(value) => Left("Failed to parse the start year")
-        case Right(value) => Right(value)
-      }
+      val year = rawTvShow.substring(dash + 1, closeParenthesis)
+      year.toIntOption
     }
   }
-  def extractEndYear(rawTvShow: String): Either[String, Int] = {
-    val endYearIndex = rawTvShow.indexOf("-")
-    val endYearIndex2 = rawTvShow.indexOf(")")
-    if (endYearIndex != -1 && endYearIndex2 != -1 && endYearIndex2 - endYearIndex == 5) {
-      Right(rawTvShow.substring(endYearIndex + 1, endYearIndex2).toInt)
+  def extractSingleYear(rawTvShow: String): Option[Int] = {
+    val openParenthesis = rawTvShow.indexOf("(")
+    val closeParenthesis = rawTvShow.indexOf(")")
+    if (closeParenthesis - openParenthesis != 5) {
+      None
     } else {
-      extractSingleYear(rawTvShow) match {
-        case Left(value) => Left("Failed to parse the end year")
-        case Right(value) => Right(value)
-      }
-    }
-  }
-  def extractSingleYear(rawTvShow: String): Either[String, Int] = {
-    val startYearIndex = rawTvShow.indexOf("(")
-    val endYearIndex = rawTvShow.indexOf(")")
-    if (
-      startYearIndex != -1 && endYearIndex != -1 && endYearIndex - startYearIndex == 5
-    ) {
-      Right(rawTvShow.substring(startYearIndex + 1, endYearIndex).toInt)
-    } else {
-      Left("Failed to parse the single year")
+      val year = rawTvShow.substring(openParenthesis + 1, closeParenthesis)
+      year.toIntOption
     }
   }
 }
