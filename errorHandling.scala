@@ -27,9 +27,9 @@ object TvShow {
   def parseShows(rawTvShows: List[String]): Either[String, List[TvShow]] = {
     val parsedTvShows = rawTvShows.map(parseShow)
     if (parsedTvShows.exists(_.isLeft)) {
-      Left(parsedTvShows.filter(_.isLeft).map(_.left.get).mkString(", "))
+      Left(parsedTvShows.filter(_.isLeft).map(_.left.getOrElse("")).mkString(", "))
     } else {
-      Right(parsedTvShows.map(_.right.get))
+      Right(parsedTvShows.flatMap(_.toOption))
     }
   }
   def parseShow(rawTvShow: String): Either[String, TvShow] = {
