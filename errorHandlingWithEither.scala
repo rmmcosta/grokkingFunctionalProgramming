@@ -18,7 +18,10 @@ object main extends App {
   println(TvShow.parseShow(rawTvShows.apply(3)))
   println(TvShow.parseShow(rawTvShows.apply(4)))
   println(TvShow.parseShow(rawTvShows.apply(5)))
-  // print(TvShow.parseShows(rawTvShows))
+  println(TvShow.parseShow(rawTvShows.apply(6)))
+  println(TvShow.parseShow(rawTvShows.apply(7)))
+  println(TvShow.parseShow(rawTvShows.apply(8)))
+  print(TvShow.parseShows(rawTvShows))
 }
 
 case class TvShow(title: String, startYear: Int, endYear: Int)
@@ -44,7 +47,7 @@ object TvShow {
     if (spaceIndex != -1) {
       Right(rawTvShow.substring(0, spaceIndex))
     } else {
-      Left("Failed to parse the title")
+      Left(s"Failed to parse the title '${rawTvShow}'")
     }
   }
   def extractStartYear(rawTvShow: String): Either[String, Int] = {
@@ -54,7 +57,7 @@ object TvShow {
       Right(rawTvShow.substring(startYearIndex + 1, endYearIndex).toInt)
     } else {
       extractSingleYear(rawTvShow) match {
-        case Left(value) => Left("Failed to parse the start year")
+        case Left(value) => Left(s"Failed to parse the start year '${rawTvShow}'")
         case Right(value) => Right(value)
       }
     }
@@ -66,7 +69,7 @@ object TvShow {
       Right(rawTvShow.substring(endYearIndex + 1, endYearIndex2).toInt)
     } else {
       extractSingleYear(rawTvShow) match {
-        case Left(value) => Left("Failed to parse the end year")
+        case Left(value) => Left(s"Failed to parse the end year '${rawTvShow}'")
         case Right(value) => Right(value)
       }
     }
@@ -79,7 +82,7 @@ object TvShow {
     ) {
       Right(rawTvShow.substring(startYearIndex + 1, endYearIndex).toInt)
     } else {
-      Left("Failed to parse the single year")
+      Left(s"Failed to parse the single year '${rawTvShow}'")
     }
   }
 }

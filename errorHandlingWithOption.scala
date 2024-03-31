@@ -25,6 +25,7 @@ object main extends App {
   println(TvShow.parseShow(rawTvShows.apply(8)))
   println(TvShow.parseShow(rawTvShows.apply(9)))
   println(TvShow.parseShow(rawTvShows.apply(10)))
+  println(TvShow.parseShows(rawTvShows))
 }
 
 case class TvShow(title: String, startYear: Int, endYear: Int)
