@@ -1,18 +1,21 @@
 object Main extends App {
   println(
-    s"should print two alternative rock artists ${searchArtists(goodArtists, List("Alternative Rock"))}"
+    s"should print 2 alternative rock artists ${searchArtists(goodArtists, List("Alternative Rock"))}"
   )
   println(
-    s"should print 4 USA artists ${searchArtists(goodArtists, locations = List("USA"))}"
+    s"should print 3 USA artists ${searchArtists(goodArtists, locations = List("USA"))}"
   )
   println(
-    s"should print 2 artists between 1980 and 1993 ${searchArtists(goodArtists, searchByActiveYears = true, activeAfter = 1980, activeBefore = 1993)}"
+    s"should print 1 artist between 1980 and 1993 ${searchArtists(goodArtists, searchByActiveYears = true, activeSince = 1980, activeUntil = 1993)}"
+  )
+  println(
+    s"should print 1 artist between 2007 and 2023 ${searchArtists(goodArtists, searchByActiveYears = true, activeSince = 2007, activeUntil = 2023)}"
   )
 }
 
 def goodArtists = List(
   Artist("Linkin Park", "Alternative Rock", "USA", 2002, false, 2019),
-  Artist("Led Zepplin", "Hard Rock", "USA", 1980, false, 1990),
+  Artist("Led Zepplin", "Hard Rock", "ENGLAND", 1980, false, 1990),
   Artist("Smashing Pumpkins", "Rock", "USA", 1980, false, 1993),
   Artist("30 Seconds to Mars", "Alternative Rock", "USA", 2007, true, 0)
 )
@@ -30,8 +33,8 @@ def searchArtists(
     genres: List[String] = List.empty,
     locations: List[String] = List.empty,
     searchByActiveYears: Boolean = false,
-    activeAfter: Int = 0,
-    activeBefore: Int = 0
+    activeUntil: Int = 0,
+    activeSince: Int = 0
 ): List[Artist] = {
   val filteredByGenre: List[Artist] =
     artists.filter(artist => genres.isEmpty || genres.contains(artist.genre))
@@ -40,7 +43,7 @@ def searchArtists(
   )
   if (searchByActiveYears)
     filteredByLocation.filter(artist =>
-      artist.yearsActiveStart >= activeAfter && artist.yearsActiveEnd > 0 && artist.yearsActiveEnd <= activeBefore
+      artist.yearsActiveStart <= activeSince && (artist.isActive || artist.yearsActiveEnd >= activeUntil)
     )
   else
     filteredByLocation
