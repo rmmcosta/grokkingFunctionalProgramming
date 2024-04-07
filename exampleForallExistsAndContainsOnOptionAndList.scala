@@ -43,14 +43,11 @@ def getUsersByFavoriteArtist(favoriteArtist: String): List[User] =
   users.filter(user => user.favoriteArtists.contains(favoriteArtist))
 
 def getUsersByCityStartingLetter(startingLetter: Char) =
-  users.filter(user => user.city.getOrElse("0").head == startingLetter)
+  users.filter(user => user.city.exists(_.startsWith(startingLetter.toString)))
 
 def getUsersByArtistsNameLongerThanOrNone(nameLength: Int) =
   users.filter(user => user.favoriteArtists.forall(_.length > nameLength))
 
 def getUsersByArtistsStartLetter(startLetter: Char) = users.filter(user =>
-  hasOneValueStartingWithLetter(user.favoriteArtists, startLetter)
+  user.favoriteArtists.exists(_.startsWith(startLetter.toString))
 )
-
-def hasOneValueStartingWithLetter(values: List[String], letter: Char): Boolean =
-  values.map(_.head).contains(letter)
