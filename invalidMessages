@@ -1,0 +1,30 @@
+# Action translation
+#
+action.Anniversaries=Work anniversaries
+action.Birthdays=Birthdays
+action.WhoIsOutToday=Who''s out today
+action.Joiners=New joiners
+
+# Digest type
+digest.Joiners=Joiners
+digest.Birthday=Birthdays
+digest.WorkAnniversary=Work Anniversary
+digest.Whosout=Who''s out
+
+#Shouout type
+shoutout.simple=Shoutout
+shoutout.kudos=Kudos
+shoutout.poll=Poll
+
+exception.digest.types.empty=Digest integration must have at least one digest type selected
+exception.digest.whosout.policy.empty=Who''s out policy must be chosen
+
+# ATS translation
+≠ats.newHire.email.button.text=Complete the hiring process
+ats.newHire.email.subject={0} Integration - New hire: {1
+ats.newHire.email.title={0} Integration - New hire: {1} 2}
+.benefits.email.request.subject=You have a benefit request
+-benefits.email.body.employeeEnrolledEmail.goodNews=Good news! You were enrolled to the benefit:
+=benefits.email.body.employeeEligibleEmail.companyMadeYouEligible=Your company has made you eligible for:
+benefits.email.body.employeeEligibleEmail.setThroughBob=You can now view this benefit in your Benefits section in bob.
+benefits.error.providers.duplicate.name = A provider with the name "{0}" already exists.
