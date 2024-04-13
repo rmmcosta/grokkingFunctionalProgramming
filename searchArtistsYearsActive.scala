@@ -49,32 +49,29 @@ def searchArtists(
     genres: List[Genre] = List.empty,
     locations: List[Location] = List.empty,
     searchByActiveYears: Boolean = false,
-    activeUntil: Int = 0,
-    activeSince: Int = 0
-): List[Artist] = {
-  val filteredByGenre: List[Artist] =
-    artists.filter(artist => genres.isEmpty || genres.contains(artist.genre))
-  val filteredByLocation: List[Artist] = filteredByGenre.filter(artist =>
-    locations.isEmpty || locations.contains(artist.origin)
+    activeSince: Int = 0,
+    activeUntil: Int = 0
+): List[Artist] =
+  artists.filter(artist =>
+    (genres.isEmpty || genres.contains(artist.genre)) &&
+      (locations.isEmpty || locations.contains(artist.origin)) &&
+      (!searchByActiveYears || wasArtistActive(
+        artist,
+        activeSince,
+        activeUntil
+      ))
   )
-  if (searchByActiveYears)
-    filterByYearsActive(filteredByLocation, activeSince, activeUntil)
-  else
-    filteredByLocation
-}
 
-def filterByYearsActive(
-    artists: List[Artist],
+def wasArtistActive(
+    artist: Artist,
     activeSince: Int,
     activeUntil: Int
-) =
-  artists.filter(artist =>
-    artist.yearsActive match {
-      case ActiveBetween(start, end) =>
-        start <= activeSince && end >= activeUntil
-      case StillActive(start) => start <= activeSince
-    }
-  )
+): Boolean =
+  artist.yearsActive match {
+    case ActiveBetween(start, end) =>
+      start <= activeSince && end >= activeUntil
+    case StillActive(start) => start <= activeSince
+  }
 
 case class Artist(
     name: String,
