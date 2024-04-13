@@ -15,6 +15,19 @@ object Main extends App {
   println(
     s"should print 1 artist between 2007 and 2023 ${searchArtists(goodArtists, searchByActiveYears = true, activeSince = 2007, activeUntil = 2023)}"
   )
+  println(
+    s"should print 17 years: ${howLongWasArtistActive(goodArtists.apply(0), 2024)}"
+  )
+  println(
+    s"should print 10 years: ${howLongWasArtistActive(goodArtists.apply(1), 2024)}"
+  )
+  println(
+    s"should print 13 years: ${howLongWasArtistActive(goodArtists.apply(2), 2024)}"
+  )
+  println(
+    s"should print 17 years: ${howLongWasArtistActive(goodArtists.apply(3), 2024)}"
+  )
+
 }
 
 def goodArtists = List(
@@ -43,6 +56,12 @@ def goodArtists = List(
     StillActive(2007)
   )
 )
+
+def howLongWasArtistActive(artist: Artist, currentYear: Int): Int =
+  artist.yearsActive match {
+    case StillActive(start)        => currentYear - start
+    case ActiveBetween(start, end) => end - start
+  }
 
 def searchArtists(
     artists: List[Artist],
