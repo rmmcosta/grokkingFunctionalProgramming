@@ -58,16 +58,23 @@ def searchArtists(
     locations.isEmpty || locations.contains(artist.origin)
   )
   if (searchByActiveYears)
-    filteredByLocation.filter(artist =>
-      artist.yearsActive match {
-        case ActiveBetween(start, end) =>
-          start <= activeSince && end >= activeUntil
-        case StillActive(start) => start <= activeSince
-      }
-    )
+    filterByYearsActive(filteredByLocation, activeSince, activeUntil)
   else
     filteredByLocation
 }
+
+def filterByYearsActive(
+    artists: List[Artist],
+    activeSince: Int,
+    activeUntil: Int
+) =
+  artists.filter(artist =>
+    artist.yearsActive match {
+      case ActiveBetween(start, end) =>
+        start <= activeSince && end >= activeUntil
+      case StillActive(start) => start <= activeSince
+    }
+  )
 
 case class Artist(
     name: String,
