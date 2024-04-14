@@ -26,27 +26,24 @@ object Main extends App {
 
 val thisIsFooFighters = Playlist(
   "This is Foo Fighters",
-  BY_ARTIST,
-  List(breakoutSong, learnToFlySong),
-  artist = Some(fooFighters)
+  BY_ARTIST(fooFighters),
+  List(breakoutSong, learnToFlySong)
 )
 val deepFocus = Playlist(
   "Deep Focus",
-  BY_GENRE,
-  List(oneMoreTimeSong, heyBoyHeyGirlSong, thePretenderSong),
-  genres = Some(Set(FUNK, HOUSE))
+  BY_GENRE(Set(FUNK, HOUSE)),
+  List(oneMoreTimeSong, heyBoyHeyGirlSong, thePretenderSong)
 )
 val myPlaylist = Playlist(
   "My Playlist",
-  BY_USER,
+  BY_USER(User("Ricardo Costa")),
   List(
     inTheEndSong,
     stairwayToHeavenSong,
     inTooDeepSong,
     californicationSong,
     bestOfYouSong
-  ),
-  user = Some(User("Ricardo Costa"))
+  )
 )
 
 def fooFighters = Artist("Foo Fighters")
@@ -78,10 +75,7 @@ def gatherSongs(
 case class Playlist(
     name: String,
     kind: Kind,
-    songs: List[Song],
-    user: Option[User] = None,
-    artist: Option[Artist] = None,
-    genres: Option[Set[Genre]] = None
+    songs: List[Song]
 ) {
   def print = println(s"""
         ${name} (${kind.description})
@@ -93,18 +87,18 @@ case class Playlist(
     s"""${song.name} (${song.artist.name})"""
   else "invalid song"
   def printUserArtistOrGenre =
-    (user, artist, genres) match {
-      case (Some(user), None, None)   => s"user: ${user}"
-      case (None, Some(artist), None) => s"artist: ${artist.name}"
-      case (None, None, Some(genres)) => s"genres: ${genres}"
-      case _                          => "invalid data"
+    kind match {
+      case BY_USER(user)     => s"user: ${user}"
+      case BY_ARTIST(artist) => s"artist: ${artist.name}"
+      case BY_GENRE(genres)  => s"genres: ${genres}"
     }
 }
 
 enum Kind(val description: String) {
-  case BY_USER extends Kind("curated by a User")
-  case BY_ARTIST extends Kind("based on a particular Artist")
-  case BY_GENRE extends Kind("based on a specific set of Genres")
+  case BY_USER(user: User) extends Kind("curated by a User")
+  case BY_ARTIST(artist: Artist) extends Kind("based on a particular Artist")
+  case BY_GENRE(genres: Set[Genre])
+      extends Kind("based on a specific set of Genres")
 }
 
 case class Song(
