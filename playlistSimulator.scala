@@ -19,6 +19,9 @@ object Main extends App {
   )
 //  println(examplePlaylist)
   examplePlaylist.foreach(_.print)
+  println(
+    s"should print a list with 4 songs from Foo Fighters: ${gatherSongs(examplePlaylist, fooFighters)}"
+  )
 }
 
 val thisIsFooFighters = Playlist(
@@ -30,13 +33,19 @@ val thisIsFooFighters = Playlist(
 val deepFocus = Playlist(
   "Deep Focus",
   BY_GENRE,
-  List(oneMoreTimeSong, heyBoyHeyGirlSong),
+  List(oneMoreTimeSong, heyBoyHeyGirlSong, thePretenderSong),
   genres = Some(Set(FUNK, HOUSE))
 )
 val myPlaylist = Playlist(
   "My Playlist",
   BY_USER,
-  List(inTheEndSong, stairwayToHeavenSong, inTooDeepSong, californicationSong),
+  List(
+    inTheEndSong,
+    stairwayToHeavenSong,
+    inTooDeepSong,
+    californicationSong,
+    bestOfYouSong
+  ),
   user = Some(User("Ricardo Costa"))
 )
 
@@ -50,12 +59,21 @@ def redHotChiliPeppers = Artist("Red Hot Chili Peppers")
 
 def breakoutSong = Song("Breakout", fooFighters)
 def learnToFlySong = Song("Learn To Fly", fooFighters)
+def bestOfYouSong = Song("Best Of You", fooFighters)
+def thePretenderSong = Song("The Pretender", fooFighters)
 def oneMoreTimeSong = Song("One More Time", daftPunk)
 def heyBoyHeyGirlSong = Song("Hey Boy Hey Girl", chemicalBrothers)
 def inTheEndSong = Song("In The End", linkinPark)
 def stairwayToHeavenSong = Song("Stairway To Heaven", ledZepplin)
 def inTooDeepSong = Song("In Too Deep", sum41)
 def californicationSong = Song("Californication", redHotChiliPeppers)
+
+def gatherSongs(
+    playlists: List[Playlist],
+    artist: Artist
+): List[Song] = playlists
+  .flatMap(playlist => playlist.songs)
+  .filter(song => song.artist == artist)
 
 case class Playlist(
     name: String,
