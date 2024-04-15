@@ -15,12 +15,16 @@ object Main extends App {
   val examplePlaylist = List(
     thisIsFooFighters,
     deepFocus,
+    deepFocus2,
     myPlaylist
   )
 //  println(examplePlaylist)
   examplePlaylist.foreach(_.print)
   println(
-    s"should print a list with 4 songs from Foo Fighters: ${gatherSongs(examplePlaylist, fooFighters)}"
+    s"should print a list with 4 songs from Foo Fighters: ${gatherSongsByArtist(examplePlaylist, fooFighters)}"
+  )
+  println(
+    s"should print Linkin Park + House songs: ${gatherSongsByArtistAndGenre(examplePlaylist, linkinPark, HOUSE)}"
   )
 }
 
@@ -45,6 +49,11 @@ val myPlaylist = Playlist(
     bestOfYouSong
   )
 )
+val deepFocus2 = Playlist(
+  "Deep Focus 2",
+  BY_GENRE(Set(HOUSE)),
+  List(dontBeShy)
+)
 
 def fooFighters = Artist("Foo Fighters")
 def daftPunk = Artist("Daft Punk")
@@ -53,7 +62,9 @@ def linkinPark = Artist("Linkin Park")
 def ledZepplin = Artist("Led Zepplin")
 def sum41 = Artist("Sum 41")
 def redHotChiliPeppers = Artist("Red Hot Chili Peppers")
+def tiesto = Artist("Tiesto")
 
+def dontBeShy = Song("Don't be Shy", tiesto)
 def breakoutSong = Song("Breakout", fooFighters)
 def learnToFlySong = Song("Learn To Fly", fooFighters)
 def bestOfYouSong = Song("Best Of You", fooFighters)
@@ -65,12 +76,30 @@ def stairwayToHeavenSong = Song("Stairway To Heaven", ledZepplin)
 def inTooDeepSong = Song("In Too Deep", sum41)
 def californicationSong = Song("Californication", redHotChiliPeppers)
 
-def gatherSongs(
+def gatherSongsByArtist(
     playlists: List[Playlist],
     artist: Artist
 ): List[Song] = playlists
   .flatMap(playlist => playlist.songs)
   .filter(song => song.artist == artist)
+
+def gatherSongsByArtistAndGenre(
+    playlists: List[Playlist],
+    artist: Artist,
+    genre: Genre
+): List[Song] =
+  playlists.foldLeft(List.empty)((songs, playlist) =>
+    playlist.kind match {
+      case BY_ARTIST(currentArtist) =>
+        if (currentArtist == artist) songs.appendedAll(playlist.songs)
+        else songs.appendedAll(List.empty)
+      case BY_GENRE(currentGenres) =>
+        if (currentGenres.contains(genre)) songs.appendedAll(playlist.songs)
+        else songs.appendedAll(List.empty)
+      case BY_USER(user) =>
+        songs.appendedAll(playlist.songs.filter(song => song.artist == artist))
+    }
+  )
 
 case class Playlist(
     name: String,
