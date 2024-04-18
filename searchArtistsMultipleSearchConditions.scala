@@ -20,6 +20,9 @@ object Main extends App {
     s"should print one Rock artist and one Hard Rock artist ${searchArtists(goodArtists, List(SearchByGenre(List(Rock, HardRock))))}"
   )
   println(
+    s"should print all artists ${searchArtists(goodArtists, List.empty)}"
+  )
+  println(
     s"should print 17 years: ${howLongWasArtistActive(goodArtists.apply(0), 2024)}"
   )
   println(
@@ -72,7 +75,7 @@ def searchArtists(
     searchConditions: List[SearchCondition]
 ): List[Artist] =
   artists.filter(artist =>
-    searchConditions.exists(passesSearchCondition(artist, _))
+    searchConditions.forall(passesSearchCondition(artist, _))
   )
 
 def passesSearchCondition(
