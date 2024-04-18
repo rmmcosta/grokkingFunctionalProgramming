@@ -25,7 +25,9 @@ object Main extends App {
   println(
     s"should print Carlos Paião since is the one active between 1945 and 1947 ${searchArtists(goodArtists, List(SearchByActiveYears(1945, 1947)))}"
   )
-
+  println(
+    s"should print Xutos e Pontapés since is the one active between 1975 and 1990 and since 2020 ${searchArtists(goodArtists, List(SearchByActiveYears(1975, 1990), SearchByActiveYears(2020, 2024)))}"
+  )
   println(
     s"should print 17 years: ${howLongWasArtistActive(goodArtists.apply(0), 2024)}"
   )
@@ -73,6 +75,12 @@ def goodArtists = List(
     Popular,
     Location("Portugal"),
     List(ActiveBetween(1943, 1950), ActiveBetween(1954, 1958))
+  ),
+  Artist(
+    "Xutos e Pontapés",
+    Popular,
+    Location("Portugal"),
+    List(ActiveBetween(1975, 1990), StillActive(2020))
   )
 )
 
