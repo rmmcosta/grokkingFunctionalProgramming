@@ -56,5 +56,4 @@ coursier
 
 .scala-build/
 
-# Sourcegraph specific
-index.scip
+lib/*.jar
