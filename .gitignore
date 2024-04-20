@@ -57,4 +57,5 @@ coursier
 .scala-build/
 
 lib/*.jar
+lib/*.txt
 *.json
