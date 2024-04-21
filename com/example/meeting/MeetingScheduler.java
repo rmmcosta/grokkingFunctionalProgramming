@@ -1,3 +1,5 @@
+package com.example.meeting;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,9 +13,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class MeetingScheduler {
     private final static String MEETINGS_FILE = "./meetings.json";
-    private final static boolean ENABLE_EXCEPTIONS = false;
+    private final static boolean ENABLE_EXCEPTIONS = true;
 
-    static void createMeetingApiCall(List<String> names, MeetingTime meetingTime) throws IOException {
+    public static void createMeetingApiCall(String meeting) throws IOException {
+        Meeting newMeeting = new ObjectMapper().readValue(meeting, Meeting.class);
+        createMeeting(newMeeting.names, newMeeting.meetingTime);
+    }
+
+    public static String getEntriesApiCall(String name) throws IOException {
+        List<MeetingTime> meetings = getEntries(name);
+        // serialize to json string
+        return new ObjectMapper().writeValueAsString(meetings);
+    }
+
+    private static void createMeeting(List<String> names, MeetingTime meetingTime) throws IOException {
         if (ENABLE_EXCEPTIONS) {
             Random rand = new Random();
             if (rand.nextFloat() < 0.25)
@@ -22,7 +35,7 @@ public class MeetingScheduler {
         saveMeetingToFile(names, meetingTime);
     }
 
-    static List<MeetingTime> getEntriesApiCall(String name) throws IOException {
+    private static List<MeetingTime> getEntries(String name) throws IOException {
         if (ENABLE_EXCEPTIONS) {
             Random rand = new Random();
             if (rand.nextFloat() < 0.25)
