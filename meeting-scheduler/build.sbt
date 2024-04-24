@@ -5,3 +5,5 @@ version := "0.1"
 scalaVersion := "3.3.1" // or the version you want to use
 
 Compile / compileOrder := CompileOrder.JavaThenScala
+
+libraryDependencies += "org.junit.jupiter" % "junit-jupiter-api" % "5.7.2" % Test
