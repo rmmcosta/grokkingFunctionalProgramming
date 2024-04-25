@@ -10,7 +10,7 @@ import static com.example.meeting.MeetingScheduler.getEntriesFromFile;
 import static com.example.meeting.MeetingScheduler.createMeetingApiCall;
 import static com.example.meeting.MeetingScheduler.MeetingTime;
 
-class ShedulingMeetingsImpure {
+public class ScheduleMeetingsImpure {
     private static final int START_HOUR = 8;
     private static final int END_HOUR = 17;
 

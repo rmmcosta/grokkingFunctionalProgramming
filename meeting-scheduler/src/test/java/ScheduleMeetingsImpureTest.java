@@ -1,39 +1,63 @@
 import org.junit.jupiter.api.Test;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.io.IOException;
 
+import com.example.meeting.MeetingScheduler.MeetingTime;
+import com.example.meeting.MeetingScheduler;
+
+import static com.example.meeting.MeetingScheduler.getEntriesFromFile;
+import static com.example.meeting.MeetingScheduler.createMeetingApiCall;
+import static com.example.meeting.MeetingScheduler.MeetingTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ScheduleMeetingsImpureTest {
 
     @Test
-    void testSchedule() {
-        // Test case 1: No scheduled meetings, should return the first available time slot
-        List<String> persons1 = Arrays.asList("Alice", "Bob", "Charlie");
-        Duration meetingDuration1 = Duration.ofHours(1);
-        MeetingTime expected1 = new MeetingTime(8, 9);
-        MeetingTime actual1 = ScheduleMeetingsImpure.schedule(persons1, meetingDuration1);
-        assertEquals(expected1, actual1);
+    public void testNoScheduledMeetings() throws IOException {
+        List<String> persons = Arrays.asList("Alice", "Bob", "Charlie");
+        Duration meetingDuration = Duration.ofHours(1);
+        MeetingTime expected = new MeetingTime(8, 9);
+        MeetingTime actual = ScheduleMeetingsImpure.schedule(persons, meetingDuration);
+        assertEquals(expected, actual);
+    }
 
-        // Test case 2: Some scheduled meetings, should return the first available time slot
-        List<String> persons2 = Arrays.asList("Alice", "Bob", "Charlie");
-        Duration meetingDuration2 = Duration.ofHours(2);
-        MeetingTime expected2 = new MeetingTime(10, 12);
-        MeetingTime actual2 = ScheduleMeetingsImpure.schedule(persons2, meetingDuration2);
-        assertEquals(expected2, actual2);
+    @Test
+    public void testSomeScheduledMeetings() throws IOException {
+        List<String> persons = Arrays.asList("Alice", "Bob", "Charlie");
+        Duration meetingDuration = Duration.ofHours(2);
+        MeetingTime expected = new MeetingTime(10, 12);
+        MeetingTime actual = ScheduleMeetingsImpure.schedule(persons, meetingDuration);
+        assertEquals(expected, actual);
+    }
 
-        // Test case 3: All time slots are occupied, should return null
-        List<String> persons3 = Arrays.asList("Alice", "Bob", "Charlie");
-        Duration meetingDuration3 = Duration.ofHours(1);
-        MeetingTime actual3 = ScheduleMeetingsImpure.schedule(persons3, meetingDuration3);
-        assertNull(actual3);
+    @Test
+    public void testAllTimeSlotsOccupied() throws IOException {
+        List<String> persons = Arrays.asList("Alice", "Bob", "Charlie");
+        Duration meetingDuration = Duration.ofHours(1);
+        MeetingTime actual = ScheduleMeetingsImpure.schedule(persons, meetingDuration);
+        assertNull(actual);
+    }
 
-        // Test case 4: Empty list of persons, should return null
-        List<String> persons4 = new ArrayList<>();
-        Duration meetingDuration4 = Duration.ofHours(1);
-        MeetingTime actual4 = ScheduleMeetingsImpure.schedule(persons4, meetingDuration4);
-        assertNull(actual4);
+    @Test
+    public void testEmptyListOfPersons() throws IOException {
+        List<String> persons = new ArrayList<>();
+        Duration meetingDuration = Duration.ofHours(1);
+        MeetingTime actual = ScheduleMeetingsImpure.schedule(persons, meetingDuration);
+        assertNull(actual);
+    }
+
+    @Test
+    public void testScheduleMultipleTimes() {
+        List<String> persons = Arrays.asList("Alice", "Bob", "Charlie");
+        Duration meetingDuration = Duration.ofHours(1);
+        assertThrows(IOException.class, () -> {
+            for (int i = 0; i < 10; i++) {
+                ScheduleMeetingsImpure.schedule(persons, meetingDuration);
+            }
+        });
     }
 }
