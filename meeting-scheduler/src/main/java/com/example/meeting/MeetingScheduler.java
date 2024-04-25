@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,18 +16,7 @@ public class MeetingScheduler {
     private final static String MEETINGS_FILE = "./meetings.json";
     private final static boolean ENABLE_EXCEPTIONS = true;
 
-    public static void createMeetingApiCall(String meeting) throws IOException {
-        Meeting newMeeting = new ObjectMapper().readValue(meeting, Meeting.class);
-        createMeeting(newMeeting.names, newMeeting.meetingTime);
-    }
-
-    public static String getEntriesApiCall(String name) throws IOException {
-        List<MeetingTime> meetings = getEntries(name);
-        // serialize to json string
-        return new ObjectMapper().writeValueAsString(meetings);
-    }
-
-    private static void createMeeting(List<String> names, MeetingTime meetingTime) throws IOException {
+    public static void createMeetingApiCall(List<String> names, MeetingTime meetingTime) throws IOException {
         if (ENABLE_EXCEPTIONS) {
             Random rand = new Random();
             if (rand.nextFloat() < 0.25)
@@ -35,7 +25,7 @@ public class MeetingScheduler {
         saveMeetingToFile(names, meetingTime);
     }
 
-    private static List<MeetingTime> getEntries(String name) throws IOException {
+    public static List<MeetingTime> getEntriesApiCall(String name) throws IOException {
         if (ENABLE_EXCEPTIONS) {
             Random rand = new Random();
             if (rand.nextFloat() < 0.25)
@@ -44,7 +34,7 @@ public class MeetingScheduler {
         return getEntriesFromFile(name);
     }
 
-    private static void saveMeetingToFile(List<String> names, MeetingScheduler.MeetingTime meetingTime)
+    public static void saveMeetingToFile(List<String> names, MeetingScheduler.MeetingTime meetingTime)
             throws IOException {
         // check if the required meeting time is available, i.e. no other meeting is
         // scheduled at that time for those names
@@ -70,7 +60,7 @@ public class MeetingScheduler {
         appendMeetingToFile(newMeeting);
     }
 
-    private static List<MeetingTime> getEntriesFromFile(String name) throws IOException {
+    public static List<MeetingTime> getEntriesFromFile(String name) throws IOException {
         String filePath = MEETINGS_FILE;
         if (!Files.exists(Paths.get(filePath))) {
             return new ArrayList<>();
@@ -122,7 +112,7 @@ public class MeetingScheduler {
         }
     }
 
-    static class MeetingTime {
+    public static class MeetingTime {
         private int startHour;
 
         public int getStartHour() {
@@ -144,7 +134,7 @@ public class MeetingScheduler {
         }
     }
 
-    static class Meeting {
+    public static class Meeting {
         private List<String> names;
 
         public List<String> getNames() {

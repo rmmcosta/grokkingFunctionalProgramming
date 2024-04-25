@@ -1,9 +1,12 @@
-name := "meeting-scheduler"
+val scala3Version = "3.4.1"
 
-version := "0.1"
+lazy val root = project
+  .in(file("."))
+  .settings(
+    name := "hello-world",
+    version := "0.1.0-SNAPSHOT",
 
-scalaVersion := "3.3.1" // or the version you want to use
+    scalaVersion := scala3Version,
 
-Compile / compileOrder := CompileOrder.JavaThenScala
-
-libraryDependencies += "org.junit.jupiter" % "junit-jupiter-api" % "5.7.2" % Test
+    libraryDependencies += "org.scalameta" %% "munit" % "0.7.29" % Test
+  )
