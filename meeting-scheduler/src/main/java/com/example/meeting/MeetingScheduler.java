@@ -42,11 +42,10 @@ public class MeetingScheduler {
         for (var name : names) {
             List<MeetingTime> meetings = getEntriesFromFile(name);
             for (var meeting : meetings) {
-                if (meeting.startHour >= meetingTime.startHour && meeting.startHour <= meetingTime.endHour) {
-                    allPersonsAreAvailable = false;
+                if (meetingTime.endHour <= meeting.startHour || meetingTime.startHour >= meeting.endHour)
                     break;
-                }
-                if (meeting.endHour >= meetingTime.startHour && meeting.endHour <= meetingTime.endHour) {
+
+                else {
                     allPersonsAreAvailable = false;
                     break;
                 }
